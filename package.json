@@ -1,0 +1,25 @@
+{
+  "name": "n8n-cli",
+  "version": "1.0.0",
+  "description": "Lightweight CLI for n8n API - designed for AI agents",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "n8n-cli": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": ["n8n", "cli", "automation", "ai"],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
