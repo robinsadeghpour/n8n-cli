@@ -160,7 +160,9 @@ export class N8nApi {
 
   // Health
   async ping(): Promise<{ version: string }> {
-    return this.request('/');
+    // n8n cloud has no root endpoint; use /workflows as health check
+    await this.request<any>('/workflows?limit=1');
+    return { version: 'connected' };
   }
 }
 

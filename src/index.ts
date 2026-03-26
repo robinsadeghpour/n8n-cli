@@ -63,8 +63,8 @@ workflow
   .action(async () => {
     try {
       const api = new N8nApi(getConfig());
-      const { workflows } = await api.listWorkflows();
-      output(workflows, program.opts());
+      const result = await api.listWorkflows();
+      output((result as any).data || (result as any).workflows || result, program.opts());
     } catch (err: any) {
       errorExit(`Error: ${err.message}`);
     }
@@ -174,8 +174,8 @@ execution
   .action(async (opts: any) => {
     try {
       const api = new N8nApi(getConfig());
-      const { data } = await api.listExecutions(parseInt(opts.limit), opts.status);
-      output(data, program.opts());
+      const result = await api.listExecutions(parseInt(opts.limit), opts.status);
+      output((result as any).data || result, program.opts());
     } catch (err: any) {
       errorExit(`Error: ${err.message}`);
     }
@@ -242,8 +242,8 @@ variable
   .action(async () => {
     try {
       const api = new N8nApi(getConfig());
-      const { variables } = await api.listVariables();
-      output(variables, program.opts());
+      const result = await api.listVariables();
+      output((result as any).data || (result as any).variables || result, program.opts());
     } catch (err: any) {
       errorExit(`Error: ${err.message}`);
     }
@@ -297,8 +297,8 @@ tag
   .action(async () => {
     try {
       const api = new N8nApi(getConfig());
-      const { tags } = await api.listTags();
-      output(tags, program.opts());
+      const result = await api.listTags();
+      output((result as any).data || (result as any).tags || result, program.opts());
     } catch (err: any) {
       errorExit(`Error: ${err.message}`);
     }
