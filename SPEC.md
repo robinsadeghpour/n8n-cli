@@ -1,10 +1,14 @@
-# n8n CLI - Specification
+# @11x.agency/n8n-cli - Specification
 
 ## Overview
 
 A lightweight CLI wrapper around the n8n REST API for AI agents. Replaces the slow MCP protocol with direct API calls.
 
+**Package:** [@11x.agency/n8n-cli](https://www.npmjs.com/package/@11x.agency/n8n-cli)
+
 **Target users:** AI agents (Claude Code, Codex, etc.) that need to manage n8n workflows programmatically.
+
+**Install:** `npm install -g @11x.agency/n8n-cli` or use `npx @11x.agency/n8n-cli <command>`
 
 ## Config
 

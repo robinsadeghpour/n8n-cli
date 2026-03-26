@@ -1,4 +1,6 @@
-# Contributing
+# Contributing to @11x.agency/n8n-cli
+
+[![npm](https://img.shields.io/npm/v/@11x.agency/n8n-cli)](https://www.npmjs.com/package/@11x.agency/n8n-cli)
 
 Contributions are welcome! Please follow these steps:
 
@@ -18,6 +20,11 @@ npm run dev  # run with tsx for hot reload
 npm run build  # compile TypeScript
 ```
 
-## Testing
+## Testing locally
+
+```bash
+npx . doctor                  # run the local build via npx
+npx . workflow list --json    # test commands against your n8n instance
+```
 
 Currently there are no automated tests. PRs with tests are appreciated!

@@ -1,39 +1,9 @@
-export interface N8nConfig {
-  baseUrl: string;
-  apiKey: string;
-}
+import type { N8nConfig, PaginatedResponse, Workflow, Execution, Variable, Tag, Credential, User, Project } from './types.js';
 
-export interface Workflow {
-  id: string;
-  name: string;
-  active: boolean;
-  nodes: any[];
-  connections: any;
-  settings?: any;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Execution {
-  id: string;
-  workflowId: string;
-  mode: string;
-  status: string;
-  startedAt: string;
-  finishedAt?: string;
-  data?: any;
-  error?: string;
-}
-
-export interface Variable {
-  key: string;
-  value: string;
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  createdAt: string;
+function buildQuery(params: Record<string, string | number | boolean | undefined>): string {
+  const entries = Object.entries(params).filter(([, v]) => v !== undefined);
+  if (entries.length === 0) return '';
+  return '?' + entries.map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`).join('&');
 }
 
 export class N8nApi {
@@ -65,8 +35,9 @@ export class N8nApi {
   }
 
   // Workflows
-  async listWorkflows(): Promise<{ workflows: Workflow[] }> {
-    return this.request('/workflows');
+  async listWorkflows(opts?: { limit?: number; cursor?: string; active?: boolean; tags?: string; name?: string }): Promise<PaginatedResponse<Workflow>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor, active: opts?.active, tags: opts?.tags, name: opts?.name });
+    return this.request(`/workflows${q}`);
   }
 
   async getWorkflow(id: string): Promise<Workflow> {
@@ -74,17 +45,11 @@ export class N8nApi {
   }
 
   async createWorkflow(workflow: Partial<Workflow>): Promise<Workflow> {
-    return this.request('/workflows', {
-      method: 'POST',
-      body: JSON.stringify(workflow),
-    });
+    return this.request('/workflows', { method: 'POST', body: JSON.stringify(workflow) });
   }
 
   async updateWorkflow(id: string, workflow: Partial<Workflow>): Promise<Workflow> {
-    return this.request(`/workflows/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(workflow),
-    });
+    return this.request(`/workflows/${id}`, { method: 'PUT', body: JSON.stringify(workflow) });
   }
 
   async deleteWorkflow(id: string): Promise<void> {
@@ -104,10 +69,9 @@ export class N8nApi {
   }
 
   // Executions
-  async listExecutions(limit = 50, status?: string): Promise<{ data: Execution[] }> {
-    let endpoint = `/executions?limit=${limit}`;
-    if (status) endpoint += `&status=${status}`;
-    return this.request(endpoint);
+  async listExecutions(opts?: { limit?: number; cursor?: string; status?: string; workflowId?: string; includeData?: boolean }): Promise<PaginatedResponse<Execution>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor, status: opts?.status, workflowId: opts?.workflowId, includeData: opts?.includeData });
+    return this.request(`/executions${q}`);
   }
 
   async getExecution(id: string): Promise<Execution> {
@@ -127,40 +91,111 @@ export class N8nApi {
   }
 
   // Variables
-  async listVariables(): Promise<{ variables: Variable[] }> {
-    return this.request('/variables');
+  async listVariables(opts?: { limit?: number; cursor?: string }): Promise<PaginatedResponse<Variable>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor });
+    return this.request(`/variables${q}`);
   }
 
-  async getVariable(key: string): Promise<Variable> {
-    return this.request(`/variables/${key}`);
+  async getVariable(id: string): Promise<Variable> {
+    return this.request(`/variables/${id}`);
   }
 
-  async setVariable(key: string, value: string): Promise<Variable> {
-    return this.request('/variables', {
-      method: 'POST',
-      body: JSON.stringify({ key, value }),
-    });
+  async createVariable(key: string, value: string): Promise<Variable> {
+    return this.request('/variables', { method: 'POST', body: JSON.stringify({ key, value }) });
   }
 
-  async deleteVariable(key: string): Promise<void> {
-    await this.request(`/variables/${key}`, { method: 'DELETE' });
+  async updateVariable(id: string, key: string, value: string): Promise<Variable> {
+    return this.request(`/variables/${id}`, { method: 'PUT', body: JSON.stringify({ key, value }) });
+  }
+
+  async deleteVariable(id: string): Promise<void> {
+    await this.request(`/variables/${id}`, { method: 'DELETE' });
   }
 
   // Tags
-  async listTags(): Promise<{ tags: Tag[] }> {
-    return this.request('/tags');
+  async listTags(opts?: { limit?: number; cursor?: string }): Promise<PaginatedResponse<Tag>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor });
+    return this.request(`/tags${q}`);
+  }
+
+  async getTag(id: string): Promise<Tag> {
+    return this.request(`/tags/${id}`);
   }
 
   async createTag(name: string): Promise<Tag> {
-    return this.request('/tags', {
-      method: 'POST',
-      body: JSON.stringify({ name }),
-    });
+    return this.request('/tags', { method: 'POST', body: JSON.stringify({ name }) });
+  }
+
+  async updateTag(id: string, name: string): Promise<Tag> {
+    return this.request(`/tags/${id}`, { method: 'PUT', body: JSON.stringify({ name }) });
+  }
+
+  async deleteTag(id: string): Promise<void> {
+    await this.request(`/tags/${id}`, { method: 'DELETE' });
+  }
+
+  // Credentials
+  async listCredentials(opts?: { limit?: number; cursor?: string }): Promise<PaginatedResponse<Credential>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor });
+    return this.request(`/credentials${q}`);
+  }
+
+  async getCredential(id: string): Promise<Credential> {
+    return this.request(`/credentials/${id}`);
+  }
+
+  async createCredential(data: any): Promise<Credential> {
+    return this.request('/credentials', { method: 'POST', body: JSON.stringify(data) });
+  }
+
+  async deleteCredential(id: string): Promise<void> {
+    await this.request(`/credentials/${id}`, { method: 'DELETE' });
+  }
+
+  async getCredentialSchema(type: string): Promise<any> {
+    return this.request(`/credentials/schema/${type}`);
+  }
+
+  // Users
+  async listUsers(opts?: { limit?: number; cursor?: string; includeRole?: boolean }): Promise<PaginatedResponse<User>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor, includeRole: opts?.includeRole });
+    return this.request(`/users${q}`);
+  }
+
+  async getUser(id: string): Promise<User> {
+    return this.request(`/users/${id}`);
+  }
+
+  // Projects
+  async listProjects(opts?: { limit?: number; cursor?: string }): Promise<PaginatedResponse<Project>> {
+    const q = buildQuery({ limit: opts?.limit, cursor: opts?.cursor });
+    return this.request(`/projects${q}`);
+  }
+
+  async getProject(id: string): Promise<Project> {
+    return this.request(`/projects/${id}`);
+  }
+
+  async createProject(data: any): Promise<Project> {
+    return this.request('/projects', { method: 'POST', body: JSON.stringify(data) });
+  }
+
+  async updateProject(id: string, data: any): Promise<Project> {
+    return this.request(`/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    await this.request(`/projects/${id}`, { method: 'DELETE' });
+  }
+
+  // Audit
+  async generateAudit(categories?: string[]): Promise<any> {
+    const body = categories ? { additionalOptions: { categories } } : {};
+    return this.request('/audit', { method: 'POST', body: JSON.stringify(body) });
   }
 
   // Health
   async ping(): Promise<{ version: string }> {
-    // n8n cloud has no root endpoint; use /workflows as health check
     await this.request<any>('/workflows?limit=1');
     return { version: 'connected' };
   }

@@ -2,12 +2,26 @@
 
 Use this skill when you need to manage n8n workflows via its REST API.
 
+**Package:** [@11x.agency/n8n-cli](https://www.npmjs.com/package/@11x.agency/n8n-cli)
+
 ## When to Use
 
 - Managing n8n workflows (create, update, delete, activate, deactivate)
 - Triggering workflow runs
 - Listing or inspecting executions
 - Managing n8n variables or tags
+
+## Install
+
+```bash
+npm install -g @11x.agency/n8n-cli
+```
+
+Or run directly:
+
+```bash
+npx @11x.agency/n8n-cli <command>
+```
 
 ## Setup
 
