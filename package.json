@@ -1,19 +1,43 @@
 {
-  "name": "n8n-cli",
+  "name": "@11x.agency/n8n-cli",
   "version": "1.0.0",
   "description": "Lightweight CLI for n8n API - designed for AI agents",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "n8n-cli": "./dist/index.js"
+    "n8n-cli": "dist/index.js",
+    "n8n-agent-cli": "dist/index.js"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": ["n8n", "cli", "automation", "ai"],
+  "keywords": [
+    "n8n",
+    "cli",
+    "automation",
+    "ai",
+    "workflow",
+    "n8n-api"
+  ],
   "license": "MIT",
+  "author": "Robin Sadeghpour",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robinsadeghpour/n8n-cli.git"
+  },
+  "homepage": "https://github.com/robinsadeghpour/n8n-cli#readme",
+  "bugs": {
+    "url": "https://github.com/robinsadeghpour/n8n-cli/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "commander": "^12.1.0"
   },

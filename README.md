@@ -1,4 +1,4 @@
-# n8n-agent-cli
+# @11x.agency/n8n-cli
 
 Lightweight CLI wrapper around the n8n REST API — built for AI agents.
 
@@ -7,7 +7,13 @@ Fast, direct REST API calls for workflow management without MCP protocol overhea
 ## Install
 
 ```bash
-npm install -g n8n-agent-cli
+npm install -g @11x.agency/n8n-cli
+```
+
+Or run directly with npx:
+
+```bash
+npx @11x.agency/n8n-cli doctor
 ```
 
 ## Setup
@@ -45,9 +51,11 @@ Use this CLI with Claude Code via the [11x marketplace plugin](https://github.co
 /plugin install n8n-agent-cli@11x-marketplace
 ```
 
-## Documentation
+## Links
 
-Full documentation, examples, and contribution guidelines: [github.com/robinsadeghpour/n8n-cli](https://github.com/robinsadeghpour/n8n-cli)
+- [npm](https://www.npmjs.com/package/@11x.agency/n8n-cli)
+- [GitHub](https://github.com/robinsadeghpour/n8n-cli)
+- [Claude Code Plugin](https://github.com/11x-agency/claude-marketplace/tree/main/plugins/n8n-agent-cli)
 
 ## License
 
