@@ -12,7 +12,7 @@ export function registerUserCommands(program: Command): void {
     .option('--cursor <cursor>', 'Pagination cursor')
     .option('--include-role', 'Include role information')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listUsers({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -26,7 +26,7 @@ export function registerUserCommands(program: Command): void {
     .command('get <id>')
     .description('Get user by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getUser(id);
       output(item, program.opts());
     }));

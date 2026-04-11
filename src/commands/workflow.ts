@@ -14,7 +14,7 @@ export function registerWorkflowCommands(program: Command): void {
     .option('--tags <tags>', 'Filter by tags')
     .option('--name <name>', 'Filter by name')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listWorkflows({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -30,7 +30,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('get <id>')
     .description('Get workflow by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getWorkflow(id);
       output(item, program.opts());
     }));
@@ -39,7 +39,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('create <json>')
     .description('Create a workflow from JSON')
     .action(run(async (json: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const data = JSON.parse(json);
       const item = await api.createWorkflow(data);
       output(item, program.opts());
@@ -49,7 +49,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('update <id> <json>')
     .description('Update a workflow by ID')
     .action(run(async (id: string, json: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const data = JSON.parse(json);
       const item = await api.updateWorkflow(id, data);
       output(item, program.opts());
@@ -59,7 +59,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete a workflow by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteWorkflow(id);
       output({ success: true }, program.opts());
     }));
@@ -68,7 +68,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('activate <id>')
     .description('Activate a workflow')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.activateWorkflow(id);
       output({ success: true }, program.opts());
     }));
@@ -77,7 +77,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('deactivate <id>')
     .description('Deactivate a workflow')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deactivateWorkflow(id);
       output({ success: true }, program.opts());
     }));
@@ -86,7 +86,7 @@ export function registerWorkflowCommands(program: Command): void {
     .command('run <id>')
     .description('Run a workflow')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.runWorkflow(id);
       output({ executionId: result.executionId }, program.opts());
     }));

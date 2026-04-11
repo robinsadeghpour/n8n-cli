@@ -14,7 +14,7 @@ export function registerExecutionCommands(program: Command): void {
     .option('--workflow-id <id>', 'Filter by workflow ID')
     .option('--include-data', 'Include execution data')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listExecutions({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -32,7 +32,7 @@ export function registerExecutionCommands(program: Command): void {
     .command('get <id>')
     .description('Get execution by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getExecution(id);
       output(item, program.opts());
     }));
@@ -41,7 +41,7 @@ export function registerExecutionCommands(program: Command): void {
     .command('retry <id>')
     .description('Retry an execution')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.retryExecution(id);
       output({ success: true }, program.opts());
     }));
@@ -50,7 +50,7 @@ export function registerExecutionCommands(program: Command): void {
     .command('stop <id>')
     .description('Stop an execution')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.stopExecution(id);
       output({ success: true }, program.opts());
     }));
@@ -59,7 +59,7 @@ export function registerExecutionCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete an execution')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteExecution(id);
       output({ success: true }, program.opts());
     }));

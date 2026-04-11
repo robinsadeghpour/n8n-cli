@@ -10,7 +10,7 @@ export function registerAuditCommand(program: Command): void {
     .description('Generate a security audit')
     .option('--categories <categories>', 'Comma-separated list of categories')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const categories = opts.categories ? opts.categories.split(',').map((c: string) => c.trim()) : undefined;
       const result = await api.generateAudit(categories);
       output(result, program.opts());

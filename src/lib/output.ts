@@ -40,7 +40,8 @@ export function run(fn: (...args: any[]) => Promise<void>) {
     try {
       await fn(...args);
     } catch (err: any) {
-      errorExit(`Error: ${err.message}`);
+      const code = err?.name === 'ConfigError' ? 2 : 1;
+      errorExit(`Error: ${err.message}`, code);
     }
   };
 }

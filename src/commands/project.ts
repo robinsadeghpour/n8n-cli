@@ -11,7 +11,7 @@ export function registerProjectCommands(program: Command): void {
     .option('--limit <number>', 'Maximum number of results')
     .option('--cursor <cursor>', 'Pagination cursor')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listProjects({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -24,7 +24,7 @@ export function registerProjectCommands(program: Command): void {
     .command('get <id>')
     .description('Get project by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getProject(id);
       output(item, program.opts());
     }));
@@ -33,7 +33,7 @@ export function registerProjectCommands(program: Command): void {
     .command('create <json>')
     .description('Create a project from JSON')
     .action(run(async (json: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const data = JSON.parse(json);
       const item = await api.createProject(data);
       output(item, program.opts());
@@ -43,7 +43,7 @@ export function registerProjectCommands(program: Command): void {
     .command('update <id> <json>')
     .description('Update a project by ID')
     .action(run(async (id: string, json: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const data = JSON.parse(json);
       const item = await api.updateProject(id, data);
       output(item, program.opts());
@@ -53,7 +53,7 @@ export function registerProjectCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete a project by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteProject(id);
       output({ success: true }, program.opts());
     }));
