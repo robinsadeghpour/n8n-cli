@@ -11,7 +11,8 @@ export class N8nApi {
   private apiKey: string;
 
   constructor(config: N8nConfig) {
-    this.baseUrl = config.baseUrl.replace(/\/$/, '');
+    const trimmed = config.baseUrl.replace(/\/+$/, '');
+    this.baseUrl = /\/api\/v\d+$/.test(trimmed) ? trimmed : `${trimmed}/api/v1`;
     this.apiKey = config.apiKey;
   }
 
@@ -201,12 +202,19 @@ export class N8nApi {
   }
 }
 
-export function getConfig(): N8nConfig {
-  const baseUrl = process.env.N8N_BASE_URL || process.env.N8N_URL;
-  const apiKey = process.env.N8N_API_KEY;
+export class ConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConfigError';
+  }
+}
+
+export function getConfig(opts?: { url?: string; apiKey?: string }): N8nConfig {
+  const baseUrl = opts?.url || process.env.N8N_BASE_URL || process.env.N8N_URL;
+  const apiKey = opts?.apiKey || process.env.N8N_API_KEY;
 
   if (!baseUrl || !apiKey) {
-    throw new Error('Missing N8N_BASE_URL or N8N_API_KEY');
+    throw new ConfigError('Missing N8N_BASE_URL or N8N_API_KEY (or --url / --api-key flags)');
   }
 
   return { baseUrl, apiKey };

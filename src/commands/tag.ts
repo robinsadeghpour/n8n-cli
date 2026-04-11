@@ -11,7 +11,7 @@ export function registerTagCommands(program: Command): void {
     .option('-l, --limit <n>', 'Limit results')
     .option('--cursor <cursor>', 'Pagination cursor')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listTags({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -24,7 +24,7 @@ export function registerTagCommands(program: Command): void {
     .command('get <id>')
     .description('Get tag by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getTag(id);
       output(item, program.opts());
     }));
@@ -33,7 +33,7 @@ export function registerTagCommands(program: Command): void {
     .command('create <name>')
     .description('Create a tag')
     .action(run(async (name: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.createTag(name);
       output(item, program.opts());
     }));
@@ -42,7 +42,7 @@ export function registerTagCommands(program: Command): void {
     .command('update <id> <name>')
     .description('Update a tag')
     .action(run(async (id: string, name: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.updateTag(id, name);
       output(item, program.opts());
     }));
@@ -51,7 +51,7 @@ export function registerTagCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete a tag')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteTag(id);
       output({ success: true }, program.opts());
     }));

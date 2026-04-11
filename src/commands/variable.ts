@@ -11,7 +11,7 @@ export function registerVariableCommands(program: Command): void {
     .option('-l, --limit <n>', 'Limit results')
     .option('--cursor <cursor>', 'Pagination cursor')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listVariables({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -24,7 +24,7 @@ export function registerVariableCommands(program: Command): void {
     .command('get <id>')
     .description('Get variable by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getVariable(id);
       output(item, program.opts());
     }));
@@ -33,7 +33,7 @@ export function registerVariableCommands(program: Command): void {
     .command('set <key> <value>')
     .description('Set a variable')
     .action(run(async (key: string, value: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.createVariable(key, value);
       output(item, program.opts());
     }));
@@ -42,7 +42,7 @@ export function registerVariableCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete a variable')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteVariable(id);
       output({ success: true }, program.opts());
     }));

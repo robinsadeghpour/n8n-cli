@@ -11,7 +11,7 @@ export function registerCredentialCommands(program: Command): void {
     .option('--limit <number>', 'Maximum number of results')
     .option('--cursor <cursor>', 'Pagination cursor')
     .action(run(async (opts: any) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.listCredentials({
         limit: opts.limit ? parseInt(opts.limit) : undefined,
         cursor: opts.cursor,
@@ -24,7 +24,7 @@ export function registerCredentialCommands(program: Command): void {
     .command('get <id>')
     .description('Get credential by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const item = await api.getCredential(id);
       output(item, program.opts());
     }));
@@ -33,7 +33,7 @@ export function registerCredentialCommands(program: Command): void {
     .command('create <json>')
     .description('Create a credential from JSON')
     .action(run(async (json: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const data = JSON.parse(json);
       const item = await api.createCredential(data);
       output(item, program.opts());
@@ -43,7 +43,7 @@ export function registerCredentialCommands(program: Command): void {
     .command('delete <id>')
     .description('Delete a credential by ID')
     .action(run(async (id: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       await api.deleteCredential(id);
       output({ success: true }, program.opts());
     }));
@@ -52,7 +52,7 @@ export function registerCredentialCommands(program: Command): void {
     .command('schema <type>')
     .description('Get credential schema by type')
     .action(run(async (type: string) => {
-      const api = new N8nApi(getConfig());
+      const api = new N8nApi(getConfig(program.opts()));
       const result = await api.getCredentialSchema(type);
       output(result, program.opts());
     }));
